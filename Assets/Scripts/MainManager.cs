@@ -12,6 +12,7 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
+    public Text HighScoreText;
     
     private bool m_Started = false;
     private int m_Points;
@@ -36,6 +37,9 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        DisplayHighScore();
+        
     }
 
     private void Update()
@@ -59,6 +63,10 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene(0);
+            }
         }
     }
 
@@ -72,5 +80,24 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        addHighscore();
+    }
+
+    private void addHighscore()
+    {
+        DataManager.Instance.SaveHighScore(m_Points);
+        DisplayHighScore();
+    }
+
+    private void DisplayHighScore()
+    {
+        if (DataManager.Instance.HighScore != 0)
+        {
+            HighScoreText.text = "Highscore: " + DataManager.Instance.HighScoreName + " : " + DataManager.Instance.HighScore;
+        }
+        else
+        {
+            HighScoreText.text = "Highscore: ---";
+        }
     }
 }
